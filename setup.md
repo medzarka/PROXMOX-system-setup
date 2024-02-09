@@ -1,6 +1,6 @@
 # Setup for the machine pve01
 
-This document is written by Mohamed Zarka. It aims to enumerate different steps followed to install and setup *Proxmox* as a home-lab.
+This document aims to enumerate different steps followed to install and setup *Proxmox* as a home-lab.
 
 The author hopes to thank many people that shared their experiences, and that he found valuable to write this document.
 

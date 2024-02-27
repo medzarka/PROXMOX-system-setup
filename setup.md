@@ -325,8 +325,11 @@ The, we address to alleviate the **Proxmox** system by disabling some useless se
 
 Since we do not use ZFS, CEPH, SPCICE PROXY and high availability, we can disable them to optimize used memory:
 
-    # disable zfs and ceph
-    sudo systemctl disable --now zfs-mount.service zfs-share.service zfs-volume-wait.service zfs-zed.service zfs-import.target zfs-volumes.target zfs.target ceph-fuse.target ceph.target
+    # disable zfs (if the main filesystem is different)
+    sudo systemctl disable --now zfs-mount.service zfs-share.service zfs-volume-wait.service zfs-zed.service zfs-import.target zfs-volumes.target zfs.target
+
+    # disable ceph
+    sudo systemctl disable --now ceph-fuse.target ceph.target
     sudo systemctl mask --now ceph.target
 
     # disable spice proxy
@@ -337,6 +340,32 @@ Since we do not use ZFS, CEPH, SPCICE PROXY and high availability, we can disabl
 
     # rebooting so the modification will be applied
     sudo reboot
+
+### 4.4 Improve ZFS filesystem performances
+
+We can activate `zstd` compression on ZFS in order to gain some performance increase.
+
+    zfs set compression=zstd rpool
+    zfs get compression rpool
+
+Then, we disable the `atime` only on rpool/ROOT/pve-1 and rpool/data:
+    
+    zfs set atime=off rpool
+    zfs get atime rpool
+
+Then, we `xattr` and `dnodesize` only for the data volume only:
+
+    zfs set xattr=sa dnodesize=auto rpool/data
+    zfs set xattr=sa rpool
+    zfs get xattr rpool/data
+    zfs get xattr rpool
+    zfs get dnodesize rpool/data
+
+Finally, we activate `autotrim` option:
+
+    zpool set autotrim=on rpool
+    zpool get autotrim rpool
+
 
 ## 3 - Proxmox hardening
 
@@ -426,7 +455,7 @@ First, we create a ssh key for the **root** user. This will be mandatory for the
     gpg --list-keys
 
     echo "install and configure pass (password manager) ..."
-    apt install --no-install-recommends pass scdaemon 
+    apt install --no-install-recommends pass scdaemon -y
     pass init medzarka@gmail.com
 
     ## To generate a password, display it, and finally delete it:
@@ -434,7 +463,7 @@ First, we create a ssh key for the **root** user. This will be mandatory for the
     #pass path/to/key
     #pass rm path/to/key
 
-    apt install --no-install-recommends git
+    apt install --no-install-recommends git -y
     # on github, create a new repository, and upload the public ssh key.
     pass git init
     pass git remote add origin <<THE GIT REPOSITORY>>
@@ -532,8 +561,8 @@ Proxmox provide a wide list of LXC images for many Linux ditributions (Ubuntu, D
 
     cat << EOF > /etc/cron.daily/system-update
     #!/bin/bash
-    apt update
-    apt upgrade -y
+    sudo apt update
+    sudo apt upgrade -y
     sudo apt-get -y clean 
     sudo apt-get -y autoclean 
     sudo apt-get -y autoremove 
@@ -648,8 +677,8 @@ The website https://tteck.github.io/Proxmox/ provides valuable scripts to instal
 | VLAN           | NAME  | IP addresses     |
 |----------------|:-----:|-----------------:|
 | vmbr0          | WAN   | -                |
-| vmbr1.10       | HOST  | 192.168.10.0/24  |
-| vmbr1.20       | DMZ   | 192.168.20.0/24  |
+| vmbr1.10       | DMZ   | 192.168.10.0/24  |
+| vmbr1.20       | HOST  | 192.168.20.0/24  |
 | vmbr1.30       | VMs   | 192.168.30.0/24  |
 | vmbr1.40       | LXCs  | 192.168.40.0/24  |
 | vmbr1.50       | TEMP  | 192.168.50.0/24  |
@@ -660,8 +689,8 @@ The website https://tteck.github.io/Proxmox/ provides valuable scripts to instal
 | Description       | ID range                 |IP range                  |
 |-------------------|:------------------------:|:------------------------:|
 | WAN               | 100  -- 999              |                          |
-| HOST              | 1000 -- 1999             | 192.168.10.1 --> 254     |
-| DMZ               | 2000 -- 2999             | 192.168.20.1 --> 254     |
+| DMZ               | 1000 -- 1999             | 192.168.10.1 --> 254     |
+| HOST              | 2000 -- 2999             | 192.168.20.1 --> 254     |
 | VMs               | 3000 -- 3999             | 192.168.30.1 --> 254     |
 | LXCs              | 4000 -- 4999             | 192.168.40.1 --> 254     |
 | TEMP              | 5000 -- 5999             | 192.168.50.1 --> 254     |

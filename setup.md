@@ -366,6 +366,17 @@ Finally, we activate `autotrim` option:
     zpool set autotrim=on rpool
     zpool get autotrim rpool
 
+### 4.5 Improve BTRFS filesystem performances
+
+#### SSD TRIM
+
+> source https://btrfs.readthedocs.io/en/latest/ch-mount-options.html
+Trim or discard is an operation on a storage device based on flash technology (like ssd SSD and NVMe), a thin-provisioned device or could be emulated on top of other block device types. 
+
+We could enable the asynchronous trim in the /etc/fstab file through adding the option: `discard=async`.
+We can also apply fstrim manually through the command: `fstrim`.
+
+
 
 ## 3 - Proxmox hardening
 

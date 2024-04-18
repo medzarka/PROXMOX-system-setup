@@ -1,0 +1,859 @@
+<!DOCTYPE html><html><head>
+      <title>setup</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="stylesheet" href="file:////home/abc/.vscode-server/extensions/shd101wyy.markdown-preview-enhanced-0.8.13/crossnote/dependencies/katex/katex.min.css">
+      
+      
+      
+      
+      
+      <style>
+      code[class*=language-],pre[class*=language-]{color:#333;background:0 0;font-family:Consolas,"Liberation Mono",Menlo,Courier,monospace;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.4;-moz-tab-size:8;-o-tab-size:8;tab-size:8;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:.8em;overflow:auto;border-radius:3px;background:#f5f5f5}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal;background:#f5f5f5}.token.blockquote,.token.comment{color:#969896}.token.cdata{color:#183691}.token.doctype,.token.macro.property,.token.punctuation,.token.variable{color:#333}.token.builtin,.token.important,.token.keyword,.token.operator,.token.rule{color:#a71d5d}.token.attr-value,.token.regex,.token.string,.token.url{color:#183691}.token.atrule,.token.boolean,.token.code,.token.command,.token.constant,.token.entity,.token.number,.token.property,.token.symbol{color:#0086b3}.token.prolog,.token.selector,.token.tag{color:#63a35c}.token.attr-name,.token.class,.token.class-name,.token.function,.token.id,.token.namespace,.token.pseudo-class,.token.pseudo-element,.token.url-reference .token.variable{color:#795da3}.token.entity{cursor:help}.token.title,.token.title .token.punctuation{font-weight:700;color:#1d3e81}.token.list{color:#ed6a43}.token.inserted{background-color:#eaffea;color:#55a532}.token.deleted{background-color:#ffecec;color:#bd2c00}.token.bold{font-weight:700}.token.italic{font-style:italic}.language-json .token.property{color:#183691}.language-markup .token.tag .token.punctuation{color:#333}.language-css .token.function,code.language-css{color:#0086b3}.language-yaml .token.atrule{color:#63a35c}code.language-yaml{color:#183691}.language-ruby .token.function{color:#333}.language-markdown .token.url{color:#795da3}.language-makefile .token.symbol{color:#795da3}.language-makefile .token.variable{color:#183691}.language-makefile .token.builtin{color:#0086b3}.language-bash .token.keyword{color:#0086b3}pre[data-line]{position:relative;padding:1em 0 1em 3em}pre[data-line] .line-highlight-wrapper{position:absolute;top:0;left:0;background-color:transparent;display:block;width:100%}pre[data-line] .line-highlight{position:absolute;left:0;right:0;padding:inherit 0;margin-top:1em;background:hsla(24,20%,50%,.08);background:linear-gradient(to right,hsla(24,20%,50%,.1) 70%,hsla(24,20%,50%,0));pointer-events:none;line-height:inherit;white-space:pre}pre[data-line] .line-highlight:before,pre[data-line] .line-highlight[data-end]:after{content:attr(data-start);position:absolute;top:.4em;left:.6em;min-width:1em;padding:0 .5em;background-color:hsla(24,20%,50%,.4);color:#f4f1ef;font:bold 65%/1.5 sans-serif;text-align:center;vertical-align:.3em;border-radius:999px;text-shadow:none;box-shadow:0 1px #fff}pre[data-line] .line-highlight[data-end]:after{content:attr(data-end);top:auto;bottom:.4em}html body{font-family:'Helvetica Neue',Helvetica,'Segoe UI',Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ol,html body>ul{margin-bottom:16px}html body ol,html body ul{padding-left:2em}html body ol.no-list,html body ul.no-list{padding:0;list-style-type:none}html body ol ol,html body ol ul,html body ul ol,html body ul ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;background-color:#f0f0f0;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:700;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:700}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::after,html body code::before{letter-spacing:-.2em;content:'\00a0'}html body pre>code{padding:0;margin:0;word-break:normal;white-space:pre;background:0 0;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:after,html body pre code:before,html body pre tt:after,html body pre tt:before{content:normal}html body blockquote,html body dl,html body ol,html body p,html body pre,html body ul{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body code,html body pre{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview ul{list-style:disc}.markdown-preview ul ul{list-style:circle}.markdown-preview ul ul ul{list-style:square}.markdown-preview ol{list-style:decimal}.markdown-preview ol ol,.markdown-preview ul ol{list-style-type:lower-roman}.markdown-preview ol ol ol,.markdown-preview ol ul ol,.markdown-preview ul ol ol,.markdown-preview ul ul ol{list-style-type:lower-alpha}.markdown-preview .newpage,.markdown-preview .pagebreak{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center!important}.markdown-preview:not([data-for=preview]) .code-chunk .code-chunk-btn-group{display:none}.markdown-preview:not([data-for=preview]) .code-chunk .status{display:none}.markdown-preview:not([data-for=preview]) .code-chunk .output-div{margin-bottom:16px}.markdown-preview .md-toc{padding:0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link div,.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link p{display:inline}.markdown-preview .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,.66);border:4px solid rgba(150,150,150,.66);background-clip:content-box}html body[for=html-export]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0;min-height:100vh}@media screen and (min-width:914px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px + 2em)}}@media screen and (max-width:914px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{font-size:14px!important;padding:1em}}@media print{html body[for=html-export]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for=html-export]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,.66);border:4px solid rgba(150,150,150,.66);background-clip:content-box}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc{padding:0 16px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link div,html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link p{display:inline}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% - 300px);padding:2em calc(50% - 457px - 300px / 2);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for=html-export]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for=html-export]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+
+      </style>
+      <!-- The content below will be included at the end of the <head> element. --><script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function () {
+    // your code here
+  });
+</script></head><body for="html-export">
+    
+    
+      <div class="crossnote markdown-preview  ">
+      
+<h1 id="setup-for-the-machine-pve01">Setup for the machine pve01 </h1>
+<p>This document aims to enumerate different steps followed to install and setup <em>Proxmox</em> as a home-lab.</p>
+<p>The author hopes to thank many people that shared their experiences, and that he found valuable to write this document.</p>
+<p>The <em>proxmox</em> is installed on a dedicated server on Internet, but it could be also hosting in a local network.</p>
+<h2 id="1---installing-proxmox-8">1 - Installing Proxmox 8 </h2>
+<p>We aim to install <strong>Prxomox 8</strong> on a <strong>HP Proliant BL460c</strong> machine. The processor is relatively old, and the only install way that was successful out of the box is the <strong>Proxmox 6.4</strong>. Else, the system will be extremely slow and will generate many issues on the screen. Indeed, the last kernel that supports the processor <strong>Intel Xeon E5-2651v2</strong> is <strong>Linux 5.4</strong>.</p>
+<p>After <em>googling</em>, we found that the <strong>Proxmox 8</strong> and any newer Linux kernels based oses could be install by adding the boot loader parameter <code>intremap=off</code>. This parameter will has no effect on the system unless we would like to work with GPU-Passthrough (in particular for Windows VMs). In the install phase, just edit the bootloader with that parameter (<em>e</em> for edit the boot loader, and then <em>F10</em> to boot).</p>
+<p>Somme error messages could then raise, but still harmless:</p>
+<ul>
+<li>DMAR: [Firmware Bug]: No firmware reserved region can cover this RMRR [0x000000008d800000-0x000000008fffffff], contact BIOS vendor for fixes</li>
+<li>firmware bug: the BIOS has corrupted hw-PMU resources We can ignore this bug (linux problem)</li>
+<li>ACPI WARNING (BUG): INVALID LENGTH FOR FAST/PM1aCONTROLBLOCK: 32 using default 16</li>
+</ul>
+<p>In the install phase, we considered using <strong>193.110.81.0</strong> DNS from <a href="http://DNS0.EU">DNS0.EU</a> (<a href="https://www.dns0.eu/zero">https://www.dns0.eu/zero</a>).</p>
+<h3 id="11---correcting-proxmox-ve-repositories">1.1 - Correcting Proxmox VE repositories </h3>
+<p>Update the sources.list</p>
+<pre class="language-text">cat &lt;&lt;EOF &gt;/etc/apt/sources.list
+deb http://deb.debian.org/debian bookworm main contrib non-free-firmware non-free
+deb http://deb.debian.org/debian bookworm-updates main contrib non-free-firmware
+
+# security updates
+deb http://security.debian.org/debian-security bookworm-security main contrib non-free-firmware non-free
+EOF
+</pre>
+<p>Enable FreeFirmware update</p>
+<pre class="language-text">echo 'APT::Get::Update::SourceListWarnings::NonFreeFirmware "false";' &gt;/etc/apt/apt.conf.d/no-bookworm-firmware.conf
+</pre>
+<p>Disable pve-enterprise repository</p>
+<pre class="language-text">cat &lt;&lt;EOF &gt;/etc/apt/sources.list.d/pve-enterprise.list
+# deb https://enterprise.proxmox.com/debian/pve bookworm pve-enterprise
+EOF
+</pre>
+<p>Enable 'pve-no-subscription' repository</p>
+<pre class="language-text">cat &lt;&lt;EOF &gt;/etc/apt/sources.list.d/pve-install-repo.list
+deb http://download.proxmox.com/debian/pve bookworm pve-no-subscription
+EOF
+</pre>
+<p>Correct 'ceph package repositories'</p>
+<pre class="language-text">cat &lt;&lt;EOF &gt;/etc/apt/sources.list.d/ceph.list
+# deb http://download.proxmox.com/debian/ceph-quincy bookworm enterprise
+# deb http://download.proxmox.com/debian/ceph-quincy bookworm no-subscription
+# deb http://download.proxmox.com/debian/ceph-reef bookworm enterprise
+# deb http://download.proxmox.com/debian/ceph-reef bookworm no-subscription
+EOF
+</pre>
+<p>Disable subscription nag (Delete browser cache)</p>
+<pre class="language-text">echo "DPkg::Post-Invoke { \"dpkg -V proxmox-widget-toolkit | grep -q '/proxmoxlib\.js$'; if [ \$? -eq 1 ]; then { echo 'Removing subscription nag from UI...'; sed -i '/.*data\.status.*{/{s/\!//;s/active/NoMoreNagging/}' /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js; }; fi\"; };" &gt;/etc/apt/apt.conf.d/no-nag-script
+apt --reinstall install proxmox-widget-toolkit &amp;&gt;/dev/null
+</pre>
+<p>Disabling high availability</p>
+<pre class="language-text">systemctl disable -q --now pve-ha-lrm
+systemctl disable -q --now pve-ha-crm
+systemctl disable -q --now corosync
+</pre>
+<p>Enable high availability (if it qas disabled)</p>
+<pre class="language-text">systemctl enable -q --now pve-ha-lrm
+systemctl enable -q --now pve-ha-crm
+systemctl enable -q --now corosync
+</pre>
+<h3 id="12---solve-the-iommu-issue">1.2 - Solve the IOMMU issue </h3>
+<p>We update the bootloader so it will boot with the parameter <code>quiet intel_iommu=on iommu=pt intremap=no_x2apic_optout</code>:</p>
+<pre class="language-text">sed -r -i 's/^#?GRUB_CMDLINE_LINUX_DEFAULT.*/GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on iommu=pt intremap=no_x2apic_optout"/g' /etc/default/grub
+echo "options vfio_iommu_type1 allow_unsafe_interrupts=1" &gt; /etc/modprobe.d/iommu_unsafe_interrupts.conf
+cat &lt;&lt;EOF &gt;&gt;/etc/modules
+vfio
+vfio_iommu_type1
+vfio_pci
+vfio_virqfd #not needed if on kernel 6.2 or newer
+EOF
+proxmox-boot-tool refresh #update-grub 
+reboot
+</pre>
+<h3 id="13---update-the-system-and-install-useful-tools">1.3 - Update the system and Install useful tools </h3>
+<p>After the reboot, we make an update for the system, and we install some useful tools:</p>
+<pre class="language-text">apt update &amp;&amp; apt upgrade -y
+apt install --no-install-recommends sudo nano htop iotop zip unzip neofetch intel-microcode -y
+reboot
+</pre>
+<h3 id="14--improve-zfs-filesystem-performances">1.4 -Improve ZFS filesystem performances </h3>
+<h4 id="note-about-the-ashift-size">Note about the ashift size: </h4>
+<p>In the <strong>Proxmox</strong> setup (install), select <code>ashift=12</code> because the <em>HP i220 array</em> provides virtual/physical sector size equal to <strong>512</strong>.</p>
+<h4 id="note-about-arc">Note about ARC: </h4>
+<p>ZFS is known to use large amount of memory for cache (Adaptive Replacement Cache: ARC).<br>
+Allocating enough memory for the ARC is crucial for IO performance, so reduce it with caution.<br>
+As a general rule, allocate at least 2 GiB Base + 1 GiB/TiB-Storage (some people say that 5GiB/TiB-Storage will be better). In our case, we will provide ZFS to use up to 5GiB of memory (normally 3GiB).</p>
+<pre class="language-text">echo "$[10 * 1024*1024*1024]" &gt;/sys/module/zfs/parameters/zfs_arc_max
+echo "$[2 * 1024*1024*1024]" &gt;/sys/module/zfs/parameters/zfs_arc_min
+</pre>
+<p>Or permanently update this value using the following command:</p>
+<pre class="language-text"># Set Max ARC size =&gt; 10GB == 10737418240 Bytes
+# Set Min ARC size =&gt; 2GB  == 2147483648
+echo "options zfs zfs_arc_max=10737418240" &gt; /etc/modprobe.d/zfs.conf
+echo "options zfs zfs_arc_min=2147483648" &gt;&gt; /etc/modprobe.d/zfs.conf
+update-initramfs -u -k all
+reboot # must be reboot to apply the modicications
+</pre>
+<h4 id="note-about-zfs-optimization-after-system-install">Note about ZFS optimization after system install: </h4>
+<blockquote>
+<p>source 1: <a href="https://blog.zanshindojo.org/proxmox-zfs-performance/">https://blog.zanshindojo.org/proxmox-zfs-performance/</a><br>
+source 2: <a href="https://martin.heiland.io/2018/02/23/zfs-tuning/index.html">https://martin.heiland.io/2018/02/23/zfs-tuning/index.html</a></p>
+</blockquote>
+<p>We can activate <code>zstd</code> compression on ZFS in order to gain some performance increase.<br>
+The <code>lz4</code> algorith is much faster in read mode, but compression rate is less compared to <code>zstd</code>.<br>
+Thus, we prioritize less data writing with <code>zstd</code>.</p>
+<pre class="language-text">zfs set compression=lz4 rpool
+zfs get compression rpool
+</pre>
+<blockquote>
+<p>Although the fact that the compression could enhance the performances, I found that<br>
+the witing speed is better when the compression is set to off ! <code>zfs set compression=off rpool</code><br>
+Still to make more experiments.</p>
+</blockquote>
+<p>The default <strong>recordsize</strong> is 128K. We configure <strong>recordsize</strong> to 512K (do not to update it in the storage config):</p>
+<pre class="language-text">zfs set recordsize=256K rpool
+zfs get recordsize rpool
+</pre>
+<p>Then, we disable the <code>atime</code> only on rpool/ROOT/pve-1 and rpool/data:</p>
+<pre class="language-text">zfs set atime=off rpool
+zfs get atime rpool
+</pre>
+<p>Then, we <code>xattr</code> and <code>dnodesize</code> only for the data volume only:</p>
+<pre class="language-text">zfs set xattr=sa dnodesize=auto rpool/data
+zfs set xattr=sa rpool
+zfs get xattr rpool/data
+zfs get xattr rpool
+zfs get dnodesize rpool/data
+</pre>
+<p>Then, updating the <code>sync</code> option could increase the write speed.<br>
+We are experimenting this option now.</p>
+<pre class="language-text">zfs set sync=disabled rpool
+#zfs set sync=standard rpool
+zfs get sync rpool
+</pre>
+<p>Finally, we activate <code>autotrim</code> option:</p>
+<pre class="language-text">zpool set autotrim=on rpool
+zpool get autotrim rpool
+#sudo systemctl enable fstrim.timer
+</pre>
+<h3 id="15---configure-swap-partition">1.5 - Configure swap partition </h3>
+<p>In the case that we install <strong>Proxmox</strong> on the ZFS/BTRFS filesystem, then it is better that the swap partition will be outside the ZFS/BTRFS volumes. So, and in the <strong>Proxmox</strong> install, we update the partition size for ZFS/BTRFS in order to create a basic partition for swap (/dev/sda4).</p>
+<pre class="language-text">mkswap /dev/sda4
+swapon /dev/sda4
+echo '/dev/sda4 none swap sw 0 0' | sudo tee -a /etc/fstab
+</pre>
+<h2 id="2---test-the-system-performances">2 - Test the system performances </h2>
+<h2 id="21---using-fio">2.1 - Using fio </h2>
+<p>We try different block size. The default size is 8k, but try other values. To measeaure the disk performances, we can use these commands:</p>
+<pre class="language-text">apt install -y fio
+#Random read
+fio --filename=test --sync=1 --rw=randread --bs=512k --numjobs=1 --iodepth=1 --group_reporting --name=test --filesize=10M --runtime=300 &amp;&amp; rm test
+
+#Random write	
+fio --filename=test --sync=1 --rw=randwrite --bs=512k --numjobs=1 --iodepth=1 --group_reporting --name=test --filesize=10M --runtime=300 &amp;&amp; rm test # --&gt; 70 to 110
+
+#Sequential read	
+fio --filename=test --sync=1 --rw=read --bs=512k --numjobs=1 --iodepth=1 --group_reporting --name=test --filesize=10M --runtime=300 &amp;&amp; rm test
+
+#Sequential write	
+fio --filename=test --sync=1 --rw=write --bs=512k --numjobs=1 --iodepth=1 --group_reporting --name=test --filesize=10M --runtime=300 &amp;&amp; rm test  # --&gt; 80 to 100
+</pre>
+<h2 id="22---using-ioping-and-pigz">2.2 - Using ioping and pigz </h2>
+<p>In this section, we are focusing on testing the system performances in term of disk write/read speed, and memory read/write speed, and finally the CPU single/multiple speed.</p>
+<p>In <strong>Proxmox</strong> documentation, they talked about the <strong>sysbench</strong> tool. But here, I prefer to get speed value that I can understand rather that get a score to be compared to other machines.</p>
+<p>First, we install the <strong>ioping</strong> and <strong>pigz</strong> tools:</p>
+<pre class="language-text">apt install -y ioping pigz
+</pre>
+<p>Second, we test the disk write and read speed:</p>
+<pre class="language-text">ioping -S64M -L -s4k -W -c 10 . # for write speed
+ioping -A -D -s16k -c 10 . # for read speed
+</pre>
+<p>For the memory speed test, we proceed as the disk test, but with creating a temporary RAM disk:</p>
+<pre class="language-text">mkdir -p /tmp/ram
+mount -t tmpfs -o size=512M tmpfs /tmp/ram/
+</pre>
+<p>Then, we test the RAM write and read speed:</p>
+<pre class="language-text">ioping -S64M -L -s4k -W -c 10 /tmp/ram/ # for write speed
+ioping -A -s16k -c 10 /tmp/ram/ # for read speed
+</pre>
+<p>We test now the CPU in single-core and multi-cores setups. This test simply compute<br>
+how much time the CPU will spend for a compression task:</p>
+<pre class="language-text">time cat &lt;/dev/urandom | head -c 1G | gzip &gt;/dev/null # sigle-core setup
+time cat &lt;/dev/urandom | head -c 1G | pigz &gt;/dev/null # multi-core setup
+</pre>
+<p>Finally, we clean up and remove the installed tools:</p>
+<pre class="language-text">apt remove --purge -y ioping pigz
+umount /tmp/ram
+rm -rf /tmp/ram
+</pre>
+<h2 id="3---optimisation-of-the-proxmox-system">3 - Optimisation of the Proxmox system </h2>
+<p>The optimization of the <strong>Proxmox</strong> system is important since the Linux kernel is configured to work with a classical computer. In this section, we focus on configuring the system to deal with a number of VMs.</p>
+<blockquote>
+<p>This section is based on information and codes provided in : <a href="https://github.com/ehlesp/smallab-k8s-pve-guide/blob/main/G015%20-%20Host%20optimization%2001%20~%20Adjustments%20through%20sysctl.md">https://github.com/ehlesp/smallab-k8s-pve-guide/blob/main/G015 - Host optimization 01 ~ Adjustments through sysctl.md</a></p>
+</blockquote>
+<p>We will work on optimizing the network, then the memory and finally the kernel. This will be done through <strong>sysctl</strong>.<br>
+The, we address to alleviate the <strong>Proxmox</strong> system by disabling some useless services.</p>
+<h3 id="31-network-optimization">3.1 Network optimization </h3>
+<pre class="language-text">cat &lt;&lt; EOF | sudo tee -a /etc/sysctl.d/85_network_optimizations.conf
+
+## NETWORK optimizations
+
+# TCP Fast Open is an extension to the transmission control protocol (TCP)
+# that helps reduce network latency by enabling data to be exchanged during
+# the sender’s initial TCP SYN [3]. Using the value 3 instead of the default 1
+# allows TCP Fast Open for both incoming and outgoing connections.
+net.ipv4.tcp_fastopen = 3
+
+# Wait a maximum of 5 * 2 = 10 seconds in the TIME_WAIT state after a FIN,
+# to handle any remaining packets in the network.
+# Load module nf_conntrack if needed.
+# BEWARE: this parameter won't be available if the firewall hasn't been enabled first!
+# Value is an INTEGER.
+net.netfilter.nf_conntrack_tcp_timeout_fin_wait = 5
+
+# Keepalive optimizations
+#
+# TCP keepalive is a mechanism for TCP connections that help to determine whether
+# the other end has stopped responding or not. TCP will send the keepalive probe
+# that contains null data to the network peer several times after a period of idle
+# time. If the peer does not respond, the socket will be closed automatically.
+#
+# By default, the keepalive routines wait for two hours (7200 secs)
+# before sending the first keepalive probe, and then resend it every 75 seconds.
+# If no ACK response is received for 9 consecutive times, the connection
+# is marked as broken. As long as there is TCP/IP socket communications going on
+# and active, no keepalive packets are needed.
+#
+# The default values are:
+# tcp_keepalive_time = 7200, tcp_keepalive_intvl = 75, tcp_keepalive_probes = 9
+#
+# We would decrease the default values for tcp_keepalive_* params as follow:
+#
+# Disconnect dead TCP connections after 10 minutes
+# https://sysctl-explorer.net/net/ipv4/tcp_keepalive_time/
+# Value in SECONDS.
+net.ipv4.tcp_keepalive_time = 60
+#
+# Determines the wait time between isAlive interval probes.
+# https://sysctl-explorer.net/net/ipv4/tcp_keepalive_intvl/
+# Value in SECONDS.
+net.ipv4.tcp_keepalive_intvl = 10
+#
+# Determines the number of probes before timing out.
+# https://sysctl-explorer.net/net/ipv4/tcp_keepalive_probes/
+net.ipv4.tcp_keepalive_probes = 6
+
+# The longer the maximum transmission unit (MTU) the better for performance,
+# but the worse for reliability. This is because a lost packet means more data
+# to be retransmitted and because many routers on the Internet cannot deliver
+# very long packets.
+net.ipv4.tcp_mtu_probing = 1
+
+# Maximum number of connections that can be queued for acceptance.
+net.core.somaxconn = 256000
+
+# How many half-open connections for which the client has not yet
+# sent an ACK response can be kept in the queue or, in other words,
+# the maximum queue length of pending connections 'Waiting Acknowledgment'.
+# SYN cookies only kick in when this number of remembered connections is surpassed.
+# Handle SYN floods and large numbers of valid HTTPS connections.
+net.ipv4.tcp_max_syn_backlog = 40000
+
+# Maximal number of packets in the receive queue that passed through the network
+# interface and are waiting to be processed by the kernel.
+# Increase the length of the network device input queue.
+net.core.netdev_max_backlog = 50000
+
+# Huge improve Linux network performance by change TCP congestion control to BBR
+# (Bottleneck Bandwidth and RTT).
+# BBR congestion control computes the sending rate based on the delivery
+# rate (throughput) estimated from ACKs.
+# https://djangocas.dev/blog/huge-improve-network-performance-by-change-tcp-congestion-control-to-bbr/
+net.core.default_qdisc = fq
+net.ipv4.tcp_congestion_control = bbr
+
+# Increase ephemeral IP ports available for outgoing connections.
+# The ephemeral port is typically used by the Transmission Control Protocol (TCP),
+# User Datagram Protocol (UDP), or the Stream Control Transmission Protocol (SCTP)
+# as the port assignment for the client end of a client–server communication.
+# https://www.cyberciti.biz/tips/linux-increase-outgoing-network-sockets-range.html
+net.ipv4.ip_local_port_range = 30000 65535
+
+# This is a setting for large networks (more than 128 hosts), and this includes
+# having many virtual machines or containers running in the Proxmox VE platform.
+# https://www.serveradminblog.com/2011/02/neighbour-table-overflow-sysctl-conf-tunning/
+net.ipv4.neigh.default.gc_thresh1 = 1024
+net.ipv4.neigh.default.gc_thresh2 = 4096
+# The gc_thresh3 is already set at /usr/lib/sysctl.d/10-pve-ct-inotify-limits.conf
+
+# Limits number of Challenge ACK sent per second, as recommended in RFC 5961.
+# Improves TCP’s Robustness to Blind In-Window Attacks.
+# https://sysctl-explorer.net/net/ipv4/tcp_challenge_ack_limit/
+net.ipv4.tcp_challenge_ack_limit = 9999
+
+# Sets whether TCP should start at the default window size only for new connections
+# or also for existing connections that have been idle for too long.
+# This setting kills persistent single connection performance and could be turned off.
+# https://sysctl-explorer.net/net/ipv4/tcp_slow_start_after_idle/
+# https://github.com/ton31337/tools/wiki/tcp_slow_start_after_idle---tcp_no_metrics_save-performance
+net.ipv4.tcp_slow_start_after_idle = 0
+
+# Maximal number of sockets in TIME_WAIT state held by the system simultaneously.
+# After reaching this number, the system will start destroying the sockets
+# that are in this state. Increase this number to prevent simple DOS attacks.
+# https://sysctl-explorer.net/net/ipv4/tcp_max_tw_buckets/
+net.ipv4.tcp_max_tw_buckets = 500000
+
+# Sets whether TCP should reuse an existing connection in the TIME-WAIT state
+# for a new outgoing connection, if the new timestamp is strictly bigger than
+# the most recent timestamp recorded for the previous connection.
+# This helps avoid from running out of available network sockets
+# https://sysctl-explorer.net/net/ipv4/tcp_tw_reuse/
+net.ipv4.tcp_tw_reuse = 1
+
+# Increase Linux autotuning TCP buffer limits.
+# The default the Linux network stack is not configured for high speed large
+# file transfer across WAN links (i.e. handle more network packets) and setting
+# the correct values may save memory resources.
+# Values in BYTES.
+net.core.rmem_default = 1048576
+net.core.rmem_max = 16777216
+net.core.wmem_default = 1048576
+net.core.wmem_max = 16777216
+net.core.optmem_max = 65536
+net.ipv4.tcp_rmem = 4096 1048576 2097152
+net.ipv4.tcp_wmem = 4096 65536 16777216
+
+# In case UDP connections are used, these limits should also be raised.
+# Values in BYTES.
+# https://sysctl-explorer.net/net/ipv4/udp_rmem_min/
+net.ipv4.udp_rmem_min = 8192
+# https://sysctl-explorer.net/net/ipv4/udp_wmem_min/
+net.ipv4.udp_wmem_min = 8192
+
+# The maximum length of dgram socket receive queue.
+net.unix.max_dgram_qlen = 1024
+
+EOF
+</pre>
+<h3 id="32-memory-optimization">3.2 Memory optimization </h3>
+<pre class="language-text">cat &lt;&lt; EOF | sudo tee -a /etc/sysctl.d/85_memory_optimizations.conf
+
+## Memory optimizations
+
+# Define how aggressive the kernel will swap memory pages.
+# The value represents the percentage of the free memory remaining
+# in the system's RAM before activating swap.
+# https://sysctl-explorer.net/vm/swappiness/
+# Value is a PERCENTAGE.
+vm.swappiness = 2
+
+# Allow application request allocation of virtual memory
+# more than real RAM size (or OpenVZ/LXC limits).
+# https://sysctl-explorer.net/vm/overcommit_memory/
+vm.overcommit_memory = 1
+
+# Controls the tendency of the kernel to reclaim the memory
+# which is used for caching of directory and inode objects.
+# Adjusting this value higher than the default one (100) should
+# help in keeping the caches down to a reasonable level.
+# Value is a PERCENTAGE.
+# https://sysctl-explorer.net/vm/vfs_cache_pressure/
+vm.vfs_cache_pressure = 500
+
+# How the kernel will deal with old data on memory.
+#
+# The kernel flusher threads will periodically wake up and write
+# `old’ data out to disk.
+# Value in CENTISECS (100 points = 1 second)
+# https://sysctl-explorer.net/vm/dirty_writeback_centisecs/
+vm.dirty_writeback_centisecs = 3000
+#
+# Define when dirty data is old enough to be eligible for
+# writeout by the kernel flusher threads.
+# https://sysctl-explorer.net/vm/dirty_expire_centisecs/
+# Value in CENTISECS (100 points = 1 second)
+vm.dirty_expire_centisecs = 18000
+
+# Adjustment of vfs cache to decrease dirty cache, aiming for a faster flush on disk.
+# 
+# Percentage of system memory that can be filled with “dirty” pages
+# — memory pages that still need to be written to disk — before the
+# pdflush/flush/kdmflush background processes kick in to write it to disk.
+# https://sysctl-explorer.net/vm/dirty_background_ratio/
+# Value is a PERCENTAGE.
+vm.dirty_background_ratio = 5
+#
+# Absolute maximum percentage amount of system memory that can be filled with
+# dirty pages before everything must get committed to disk.
+# https://sysctl-explorer.net/vm/dirty_ratio/
+# Value is a PERCENTAGE.
+vm.dirty_ratio = 10
+
+# Indicates the current number of "persistent" huge pages in the
+# kernel's huge page pool.
+# https://sysctl-explorer.net/vm/nr_hugepages/
+# https://www.kernel.org/doc/Documentation/vm/hugetlbpage.txt
+vm.nr_hugepages = 1
+EOF
+</pre>
+<h3 id="33-kernel-optimization">3.3 Kernel optimization </h3>
+<pre class="language-text">cat &lt;&lt; EOF | sudo tee -a /etc/sysctl.d/85_kernel_optimizations.conf
+
+## Kernel optimizations
+
+# Controls whether unprivileged users can load eBPF programs.
+# For most scenarios this is recommended to be set as 1 (enabled).
+# This is a kernel hardening concern rather than a optimization one, but
+# is left here since its just this value. 
+kernel.unprivileged_bpf_disabled=1
+
+# Process Scheduler related settings
+#
+# Determines how long a migrated process has to be running before the kernel
+# will consider migrating it again to another core. So, a higher value makes
+# the kernel take longer before migrating again an already migrated process.
+# Value in MILLISECONDS.
+kernel.sched_migration_cost_ns = 5000000
+#
+# This setting groups tasks by TTY, to improve perceived responsiveness on an
+# interactive system. On a server with a long running forking daemon, this will
+# tend to keep child processes from migrating away as soon as they should.
+# So in a server it's better to leave it disabled.
+kernel.sched_autogroup_enabled = 0
+
+EOF
+</pre>
+<h2 id="4---proxmox-hardening">4 - Proxmox hardening </h2>
+<h3 id="41-create-an-alternative-administrator-user-mgrsys">4.1 Create an alternative administrator user (mgrsys) </h3>
+<blockquote>
+<p>This section is based on information and codes provided in : <a href="https://github.com/ehlesp/smallab-k8s-pve-guide/blob/main/G008%20-%20Host%20hardening%2002%20~%20Alternative%20administrator%20user.md">https://github.com/ehlesp/smallab-k8s-pve-guide/blob/main/G008 - Host hardening 02 ~ Alternative administrator user.md</a></p>
+</blockquote>
+<p>Since <strong>root</strong> is the superuser with all the privileges, using it directly on any Linux server has always the potential for creating all sorts of problems (security related or of any other kind). To mitigate those problems, the recommended thing to do is to create an alternative administrator user with sudo privileges and use it instead of root.</p>
+<pre class="language-text">adduser mgrsys  # create the new user
+adduser mgrsys sudo # add the new user to the sudo group
+pveum groupadd pvemgrs -comment "PVE System Managers" # add a new group in proxmox
+pveum aclmod / -group pvemgrs -role Administrator # adjust the new group roles
+pveum user add mgrsys@pam -comment "PVE System Manager" -email "medzarka@gmail.com" -firstname "PVE" -lastname "SysManager" -groups pvemgrs # add the new user to the new created proxmox group
+</pre>
+<p>Now connect to the new created user and type:</p>
+<pre class="language-text">ssh-keygen -P "" -m PEM -t rsa -b 4096 -C "mgrsys@pve"  # create ssh key pair for the new user
+&gt; /home/mgrsys/.ssh/authorized_keys # clear the authorized keys
+cat /home/mgrsys/.ssh/id_rsa.pub &gt;&gt; /home/mgrsys/.ssh/authorized_keys
+chmod -R go= /home/mgrsys/.ssh
+chown -R mgrsys:mgrsys /home/mgrsys/.ssh
+</pre>
+<p>Finally, create a TAF for the new created user, and we save the created ssh keys in a save place.</p>
+<h3 id="42-manage-the-root-user">4.2 Manage the root user </h3>
+<p>The <strong>root</strong> user will be kept, but the access to it will be more complicated. For the <strong>Proxmox</strong> user interface, the new created user <strong>mgrsys</strong> will be enough. And the access to root shell, will be through <strong>sudo</strong>.</p>
+<p>In this section, we aim to install the <strong>pass</strong> password manager (which will be synchronized with git). Then, we will update the root password with a hard one, and we create ssh key pair for it.</p>
+<h4 id="421-create-the-root-ssh-keys">4.2.1 Create the root ssh keys </h4>
+<p>First, we create a ssh key for the <strong>root</strong> user. This will be mandatory for the following steps.</p>
+<pre class="language-text">ssh-keygen -P "" -m PEM -t rsa -b 4096 -C "root@pve"  # create ssh key pair for the new user
+&gt; /root/.ssh/authorized_keys # clear the authorized keys
+cat /root/.ssh/id_rsa.pub &gt;&gt; /root/.ssh/authorized_keys
+chmod -R go= /root/.ssh
+chown -R root:root /root/.ssh
+</pre>
+<h4 id="422-install-gpg-and-pass">4.2.2 Install GPG and PASS </h4>
+<pre class="language-text">apt install gnupg2
+rm -rf ~/.gnupg
+mkdir -m 0700 ~/.gnupg
+touch ~/.gnupg/gpg.conf
+chmod 600 ~/.gnupg/gpg.conf
+
+cat &lt;&lt; EOF &gt; ~/.gnupg/gpg.conf
+# Prohibit the inclusion of the version string in the ASCII armored output
+no-emit-version
+# disallow including a comment line in plain text signatures and ASCII armored messages
+no-comments
+# Display long keyid-formats
+keyid-format 0xlong
+# Do not include key id's in encrypted packets
+throw-keyids
+EOF
+
+gpg --list-keys # to list the available keys
+
+cat &lt;&lt; EOF &gt; ~/.gnupg/keydetails
+%echo Generating a basic OpenPGP key
+%echo More configuration are avaiable at https://www.gnupg.org/documentation/manuals/gnupg/Unattended-GPG-key-generation.html
+Key-Type: RSA
+Key-Length: 4096
+Subkey-Type: RSA
+Subkey-Length: 4096
+Name-Real: mzarka
+Name-Comment: mzarka gpg keys
+Name-Email: medzarka@gmail.com
+Expire-Date: 0
+%ask-passphrase
+# %no-ask-passphrase
+# %no-protection
+# %pubring pubring.kbx
+# %secring trustdb.gpg
+# Do a commit here, so that we can later print "done" :-)
+%commit
+%echo done
+EOF
+
+gpg --verbose --batch --gen-key ~/.gnupg/keydetails
+echo -e "5\ny\n" |  gpg --command-fd 0 --expert --edit-key medzarka@gmail.com trust;
+gpg --list-keys
+
+echo "install and configure pass (password manager) ..."
+apt install --no-install-recommends pass scdaemon -y
+pass init medzarka@gmail.com
+
+## To generate a password, display it, and finally delete it:
+#pass generate path/to/key 100 
+#pass path/to/key
+#pass rm path/to/key
+
+apt install --no-install-recommends git -y
+# on github, create a new repository, and upload the public ssh key.
+pass git init
+pass git remote add origin &lt;&lt;THE GIT REPOSITORY&gt;&gt;
+pass git push -u --all
+# No, every stored password will be saved on git.
+</pre>
+<h4 id="423-update-the-root-password-with-pass">4.2.3 Update the root password with pass </h4>
+<p>Since <strong>PASSS</strong> is installed, we can create now a secure root password.</p>
+<pre class="language-text">pass generate system/root 100
+ROOT_PASS=`pass system/root`
+echo "root:$ROOT_PASS" | chpasswd
+</pre>
+<p>Finally, create a TAF for the <strong>root</strong> user, and we save the created ssh keys in a save place.</p>
+<h3 id="43-hardening-the-ssh-access">4.3 Hardening the ssh access </h3>
+<p>In this section, we will make the access to the <strong>Proxmox</strong> server through <strong>ssh</strong> more complex:</p>
+<pre class="language-text"># Disable the dns usage for more speed,
+sed -r -i 's/^#?UseDNS.*/UseDNS no/g' /etc/ssh/sshd_config
+
+#Diable accessing ssh through password
+sed -r -i 's/^#?PermitEmptyPasswords.*/PermitEmptyPasswords no/g' /etc/ssh/sshd_config
+
+#Disabling X11Forwarding
+sed -r -i 's/^#?X11Forwarding.*/X11Forwarding no/g' /etc/ssh/sshd_config
+
+#Enabling accessing ssh through ssk keys
+sed -r -i 's/^#?PubkeyAuthentication.*/PubkeyAuthentication yes/g' /etc/ssh/sshd_config
+
+#Enabling accessing ssh through passwords
+sed -r -i 's/^#?PasswordAuthentication.*/PasswordAuthentication no/g' /etc/ssh/sshd_config
+
+#Disabling the root login
+sed -r -i 's/^#?PermitRootLogin.*/PermitRootLogin no/g' /etc/ssh/sshd_config
+</pre>
+<p>Then, we tweak the ssh connections to keep them working even after some minutes of inactivity:</p>
+<pre class="language-text">sed -r -i 's/^#?ClientAliveInterval.*/ClientAliveInterval 60/g' /etc/ssh/sshd_config
+sed -r -i 's/^#?TCPKeepAlive.*/TCPKeepAlive yes/g' /etc/ssh/sshd_config
+sed -r -i 's/^#?ClientAliveCountMax.*/ClientAliveCountMax 10000/g' /etc/ssh/sshd_config
+</pre>
+<p>On the client side, the <em>~/.ssh/config</em> file should contains the follwing instructions:</p>
+<pre class="language-text">Host *
+    ServerAliveInterval 240
+    ClientAliveCountMax 10000
+</pre>
+<p>After creating the ssh key pairs, we can connect to the server from the client side by one of the following commands:</p>
+<pre class="language-text">ssh-copy-id root@SERVER_IP
+cat ~/.ssh/id_rsa.pub | ssh root@SERVER_IP "mkdir -p ~/.ssh &amp;&amp; touch ~/.ssh/authorized_keys &amp;&amp; chmod -R go= ~/.ssh &amp;&amp; cat &gt;&gt; ~/.ssh/authorized_keys"
+</pre>
+<p>Finally, restart the <strong>ssh</strong> server.</p>
+<pre class="language-text">sudo systemctl restart ssh
+sudo systemctl restart sshd
+</pre>
+<h2 id="5---configuring-the-proxmox-firewall">5 - Configuring the proxmox Firewall </h2>
+<blockquote>
+<p>More information could be gathered on the Proxmox system on the website <a href="https://pve.proxmox.com/wiki/Firewall">https://pve.proxmox.com/wiki/Firewall</a></p>
+</blockquote>
+<p>To configure the firewall, we will consider two zones (Security Group):</p>
+<ul>
+<li>WAN: to handle connections from the Internet,</li>
+<li>HOST: to handle connections from internal machines (VMs).</li>
+</ul>
+<p>For the <strong>WAN</strong> zone, we will accept only the following connections:</p>
+<ul>
+<li>ICMP from the server hosting service only (so that the server will be seen as alive),</li>
+<li>22/TCP to access to the server through ssh,</li>
+<li>8006/TCP to access to the server through the Proxmox Admin GUI.</li>
+</ul>
+<blockquote>
+<p>To get the IP address of the hosting server, we open the ICMP access and we put the firewall logging on for that rule.</p>
+</blockquote>
+<p>For the <strong>HOST</strong> zone, we will accept only the following connections:</p>
+<ul>
+<li>ICMP from the all the VMs,</li>
+<li>8006/TCP to access to the server through the Proxmox Admin GUI from the VMs,</li>
+<li>22/TCP to access ssh through the VMs.</li>
+</ul>
+<p>By default, all the outgoing connections are allowed, and the rest of incoming connections are denied.</p>
+<h2 id="6---proxmox-lxc-templates">6 - Proxmox LXC templates </h2>
+<p>Proxmox provide a wide list of LXC images for many Linux ditributions (Ubuntu, Debian, Opensuse, Centos, Turnkey, ...). To update this list, type the following command in the shell:</p>
+<pre class="language-text">pveam update
+</pre>
+<h2 id="7---misc">7 - Misc </h2>
+<h3 id="71---daily-system-update">7.1 - Daily System update </h3>
+<p>cat &lt;&lt; EOF &gt; /etc/cron.daily/system-update<br>
+#!/bin/bash<br>
+sudo apt update<br>
+sudo apt upgrade -y<br>
+sudo apt-get -y clean<br>
+sudo apt-get -y autoclean<br>
+sudo apt-get -y autoremove<br>
+EOF</p>
+<pre class="language-text">chmod a+x /etc/cron.daily/system-update
+run-parts --test /etc/cron.daily/ # to check
+</pre>
+<h3 id="72---daily-system-backup">7.2 - Daily System backup </h3>
+<p>The backup of the <strong>Proxmox</strong> system will be done through <strong>rclone</strong>. In this section, we will install <strong>rclone</strong> configure it. Then, we will create a script that will be called after each dump operation.</p>
+<pre class="language-text">apt install --no-install-recommends rclone
+pass generate system/rclone/config 100
+rclone config # configure the backup server, and protect the configuration a generated password
+mkdir -p /root/bin
+
+cat &lt;&lt; EOF &gt; /etc/cron.daily/backup-rclone
+#!/bin/bash
+
+############ /START CONFIG
+dumpdir="/var/lib/vz/dump/" # Set this to where the vzdump files are stored
+confdir="/var/lib/vz/configs/" # Set this to where the config files are stored
+MAX_AGE=60 # This is the age in days to keep local backup copies.
+export PASSWORD_STORE_DIR=/root/.password-store
+export RCLONE_PASSWORD_COMMAND='/bin/bash -l -c "/usr/bin/pass system/rclone/config"'
+export RCLONE_CONFIG_PASS=$(/bin/bash -l -c "/usr/bin/pass system/rclone/config")
+LOGFILE="/var/log/backup-rclone.log"
+############ /END CONFIG
+
+mkdir -p  /var/log/rclone
+mkdir -p  "$confdir"
+
+echo " ######## Deleting backups and configs older than $MAX_AGE days." &gt;&gt; $LOGFILE 2&gt;&amp;1
+find $dumpdir -type f -mtime +$MAX_AGE -exec /bin/rm -f {} \; &gt;&gt; $LOGFILE 2&gt;&amp;1
+find $confdir -type f -mtime +$MAX_AGE -exec /bin/rm -f {} \; &gt;&gt; $LOGFILE 2&gt;&amp;1
+echo " ######## Done." &gt;&gt; $LOGFILE 2&gt;&amp;1
+
+echo " ######## Backing up $dumpdir to remote storage ..." &gt;&gt; $LOGFILE 2&gt;&amp;1
+
+echo " ----- &gt; create the remote dir (myServers/pve01/dumps)" &gt;&gt; $LOGFILE 2&gt;&amp;1
+/usr/bin/rclone mkdir -v --ask-password=false \
+--config /root/.config/rclone/rclone.conf \
+--log-file /var/log/rclone/rclone.log \
+pcloud:/SyncCloud/myServers/pve01/dumps &gt;&gt; $LOGFILE 2&gt;&amp;1
+
+echo " ----- &gt; Synchronize remote files" &gt;&gt; $LOGFILE 2&gt;&amp;1
+/usr/bin/rclone sync -v --ask-password=false --ignore-size --create-empty-src-dirs \
+--config /root/.config/rclone/rclone.conf --delete-during \
+--log-file /var/log/rclone/rclone.log \
+$dumpdir pcloud:/SyncCloud/myServers/pve01/dumps &gt;&gt; $LOGFILE 2&gt;&amp;1
+
+echo " ######## Done." &gt;&gt; $LOGFILE 2&gt;&amp;1
+
+
+echo " ######## Backing up main PVE configs" &gt;&gt; $LOGFILE 2&gt;&amp;1
+
+echo " ----- &gt; Warming up" &gt;&gt; $LOGFILE 2&gt;&amp;1
+_tdir=${TMP_DIR:-/var/tmp} 
+_tdir=$(mktemp -d $_tdir/proxmox-XXXXXXXX)
+function clean_up {
+    echo "Cleaning up"
+    rm -rf $_tdir
+}
+trap clean_up EXIT
+_now=$(date +%Y-%m-%d.%H.%M.%S)
+_HOSTNAME=$(hostname -f)
+_filename1="$_tdir/proxmoxetc.$_now.tar"
+_filename2="$_tdir/proxmoxpve.$_now.tar"
+_filename3="$_tdir/proxmoxroot.$_now.tar"
+_filename4="$confdir/proxmox_backup_"$_HOSTNAME"_"$_now".tar.gz"
+
+echo " ----- &gt; Create tar files" &gt;&gt; $LOGFILE 2&gt;&amp;1
+# copy key system files
+tar --warning='no-file-ignored' -cPf "$_filename1" /etc/. &gt;&gt; $LOGFILE 2&gt;&amp;1
+tar --warning='no-file-ignored' -cPf "$_filename2" /var/lib/pve-cluster/. &gt;&gt; $LOGFILE 2&gt;&amp;1
+tar --warning='no-file-ignored' -cPf "$_filename3" /root/. &gt;&gt; $LOGFILE 2&gt;&amp;1
+
+echo " ----- &gt; Compressing files" &gt;&gt; $LOGFILE 2&gt;&amp;1
+tar -cvzPf "$_filename4" $_tdir/*.tar &gt;&gt; $LOGFILE 2&gt;&amp;1
+
+echo " ----- &gt; create the remote dir (myServers/pve01/configs)" &gt;&gt; $LOGFILE 2&gt;&amp;1
+/usr/bin/rclone mkdir -v --ask-password=false \
+--config /root/.config/rclone/rclone.conf \
+--log-file /var/log/rclone/rclone.log \
+pcloud:/SyncCloud/myServers/pve01/configs &gt;&gt; $LOGFILE 2&gt;&amp;1
+
+echo " ----- &gt; Synchronize remote files from $confdir" &gt;&gt; $LOGFILE 2&gt;&amp;1
+/usr/bin/rclone sync -v --ask-password=false --ignore-size --create-empty-src-dirs \
+--config /root/.config/rclone/rclone.conf --delete-during \
+--log-file /var/log/rclone/rclone.log \
+$confdir pcloud:/SyncCloud/myServers/pve01/configs &gt;&gt; $LOGFILE 2&gt;&amp;1
+echo " ######## Done." &gt;&gt; $LOGFILE 2&gt;&amp;1
+EOF
+
+#chmod a+x /root/bin/backup-rclone.sh
+#sed -r -i 's/^#?script.*/script:\/root\/bin\/vzbackup-rclone.sh/g' /etc/vzdump.conf 
+
+chmod a+x /etc/cron.daily/backup-rclone
+run-parts --test /etc/cron.daily/ # to check
+</pre>
+<p>After this step, the system will call the above script daily. Please to consider to schedule a fill backup (for all the VMs) for each Sunday at 1am.</p>
+<h3 id="73---other">7.3 - Other </h3>
+<p>The website <a href="https://tteck.github.io/Proxmox/">https://tteck.github.io/Proxmox/</a> provides valuable scripts to install and configure many things on the Proxmox system.</p>
+<h2 id="8---vm-and-network-organization">8 - VM and network organization </h2>
+<h3 id="81-vlans">8.1 Vlans </h3>
+<table>
+<thead>
+<tr>
+<th>VLAN</th>
+<th style="text-align:center">NAME</th>
+<th style="text-align:right">IP addresses</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vmbr0</td>
+<td style="text-align:center">WAN</td>
+<td style="text-align:right">-</td>
+</tr>
+<tr>
+<td>vmbr1.10</td>
+<td style="text-align:center">DMZ</td>
+<td style="text-align:right">192.168.10.0/24</td>
+</tr>
+<tr>
+<td>vmbr1.20</td>
+<td style="text-align:center">HOST</td>
+<td style="text-align:right">192.168.20.0/24</td>
+</tr>
+<tr>
+<td>vmbr1.30</td>
+<td style="text-align:center">VMs</td>
+<td style="text-align:right">192.168.30.0/24</td>
+</tr>
+<tr>
+<td>vmbr1.40</td>
+<td style="text-align:center">LXCs</td>
+<td style="text-align:right">192.168.40.0/24</td>
+</tr>
+<tr>
+<td>vmbr1.50</td>
+<td style="text-align:center">TEMP</td>
+<td style="text-align:right">192.168.50.0/24</td>
+</tr>
+</tbody>
+</table>
+<h3 id="82-vm-ids-and-ips">8.2 VM IDs and IPs </h3>
+<table>
+<thead>
+<tr>
+<th>Description</th>
+<th style="text-align:center">ID range</th>
+<th style="text-align:center">IP range</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>WAN</td>
+<td style="text-align:center">100  -- 999</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>DMZ</td>
+<td style="text-align:center">1000 -- 1999</td>
+<td style="text-align:center">192.168.10.1 --&gt; 254</td>
+</tr>
+<tr>
+<td>HOST</td>
+<td style="text-align:center">2000 -- 2999</td>
+<td style="text-align:center">192.168.20.1 --&gt; 254</td>
+</tr>
+<tr>
+<td>VMs</td>
+<td style="text-align:center">3000 -- 3999</td>
+<td style="text-align:center">192.168.30.1 --&gt; 254</td>
+</tr>
+<tr>
+<td>LXCs</td>
+<td style="text-align:center">4000 -- 4999</td>
+<td style="text-align:center">192.168.40.1 --&gt; 254</td>
+</tr>
+<tr>
+<td>TEMP</td>
+<td style="text-align:center">5000 -- 5999</td>
+<td style="text-align:center">192.168.50.1 --&gt; 254</td>
+</tr>
+</tbody>
+</table>
+<h3 id="83-templates-ids-and-ips">8.3 Templates IDs and IPs </h3>
+<table>
+<thead>
+<tr>
+<th>Description</th>
+<th style="text-align:center">ID range</th>
+<th style="text-align:center">IP range</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Templates:Alpine</td>
+<td style="text-align:center">5000 -- 5099</td>
+<td style="text-align:center">192.168.50.1  --&gt; 9</td>
+</tr>
+<tr>
+<td>Templates:Ubuntu</td>
+<td style="text-align:center">5100 -- 5199</td>
+<td style="text-align:center">192.168.50.10 --&gt; 19</td>
+</tr>
+<tr>
+<td>Templates:Debian</td>
+<td style="text-align:center">5200 -- 5299</td>
+<td style="text-align:center">192.168.50.20 --&gt; 29</td>
+</tr>
+<tr>
+<td>Templates:Openwrt</td>
+<td style="text-align:center">5300 -- 5399</td>
+<td style="text-align:center">192.168.50.30 --&gt; 39</td>
+</tr>
+<tr>
+<td>Templates:Rocky</td>
+<td style="text-align:center">5400 -- 5499</td>
+<td style="text-align:center">192.168.50.40 --&gt; 49</td>
+</tr>
+</tbody>
+</table>
+
+      </div>
+      
+      
+    
+    
+    
+    
+    
+    
+  
+    </body></html>

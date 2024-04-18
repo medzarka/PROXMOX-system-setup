@@ -19,20 +19,186 @@ Somme error messages could then raise, but still harmless:
 
 In the install phase, we considered using **193.110.81.0** DNS from DNS0.EU (https://www.dns0.eu/zero).
 
-Then, and after the reboot, we make an update for the system, and we install some useful tools:
+
+### 1.1 - Correcting Proxmox VE repositories
+
+Update the sources.list
+
+    cat <<EOF >/etc/apt/sources.list
+    deb http://deb.debian.org/debian bookworm main contrib non-free-firmware non-free
+    deb http://deb.debian.org/debian bookworm-updates main contrib non-free-firmware
+
+    # security updates
+    deb http://security.debian.org/debian-security bookworm-security main contrib non-free-firmware non-free
+    EOF
+
+Enable FreeFirmware update
+
+    echo 'APT::Get::Update::SourceListWarnings::NonFreeFirmware "false";' >/etc/apt/apt.conf.d/no-bookworm-firmware.conf
+
+Disable pve-enterprise repository
+
+    cat <<EOF >/etc/apt/sources.list.d/pve-enterprise.list
+    # deb https://enterprise.proxmox.com/debian/pve bookworm pve-enterprise
+    EOF
+
+Enable 'pve-no-subscription' repository
+
+    cat <<EOF >/etc/apt/sources.list.d/pve-install-repo.list
+    deb http://download.proxmox.com/debian/pve bookworm pve-no-subscription
+    EOF
+
+Correct 'ceph package repositories'
+
+    cat <<EOF >/etc/apt/sources.list.d/ceph.list
+    # deb http://download.proxmox.com/debian/ceph-quincy bookworm enterprise
+    # deb http://download.proxmox.com/debian/ceph-quincy bookworm no-subscription
+    # deb http://download.proxmox.com/debian/ceph-reef bookworm enterprise
+    # deb http://download.proxmox.com/debian/ceph-reef bookworm no-subscription
+    EOF
+
+Disable subscription nag (Delete browser cache)
+
+    echo "DPkg::Post-Invoke { \"dpkg -V proxmox-widget-toolkit | grep -q '/proxmoxlib\.js$'; if [ \$? -eq 1 ]; then { echo 'Removing subscription nag from UI...'; sed -i '/.*data\.status.*{/{s/\!//;s/active/NoMoreNagging/}' /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js; }; fi\"; };" >/etc/apt/apt.conf.d/no-nag-script
+    apt --reinstall install proxmox-widget-toolkit &>/dev/null
+
+Disabling high availability
+    
+    systemctl disable -q --now pve-ha-lrm
+    systemctl disable -q --now pve-ha-crm
+    systemctl disable -q --now corosync
+
+Enable high availability (if it qas disabled)
+
+    systemctl enable -q --now pve-ha-lrm
+    systemctl enable -q --now pve-ha-crm
+    systemctl enable -q --now corosync
+
+### 1.2 - Solve the IOMMU issue
+
+We update the bootloader so it will boot with the parameter `quiet intel_iommu=on iommu=pt intremap=no_x2apic_optout`:
+
+    sed -r -i 's/^#?GRUB_CMDLINE_LINUX_DEFAULT.*/GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on iommu=pt intremap=no_x2apic_optout"/g' /etc/default/grub
+    echo "options vfio_iommu_type1 allow_unsafe_interrupts=1" > /etc/modprobe.d/iommu_unsafe_interrupts.conf
+    cat <<EOF >>/etc/modules
+    vfio
+    vfio_iommu_type1
+    vfio_pci
+    vfio_virqfd #not needed if on kernel 6.2 or newer
+    EOF
+    proxmox-boot-tool refresh #update-grub 
+    reboot
+
+### 1.3 - Update the system and Install useful tools
+
+After the reboot, we make an update for the system, and we install some useful tools:
 
     apt update && apt upgrade -y
-    apt install --no-install-recommends sudo nano htop iotop zip unzip neofetch -y
-
-Finally, we update the bootloader so it will boot with the parameter `intremap=off`:
-
-    nano /etc/default/grub # and add intremap=off in GRUB_CMDLINE_LINUX_DEFAULT
-    echo "options vfio_iommu_type1 allow_unsafe_interrupts=1" > /etc/modprobe.d/iommu_unsafe_interrupts.conf
-    update-grub
+    apt install --no-install-recommends sudo nano htop iotop zip unzip neofetch intel-microcode -y
     reboot
+
+### 1.4 -Improve ZFS filesystem performances
+
+
+#### Note about the ashift size:
+
+In the **Proxmox** setup (install), select `ashift=13`. The *HP i220 array* provides virtual/physical sector size equal to **512** (physical/virtual). But the `ashift=13` hexebits better performances.
+
+#### Note about ARC:
+
+ZFS is known to use large amount of memory for cache (Adaptive Replacement Cache: ARC).
+Allocating enough memory for the ARC is crucial for IO performance, so reduce it with caution.
+As a general rule, allocate at least 2 GiB Base + 1 GiB/TiB-Storage (some people say that 5GiB/TiB-Storage will be better). In our case, we will provide ZFS to use up to 5GiB of memory (normally 3GiB).
+
+    echo "$[10 * 1024*1024*1024]" >/sys/module/zfs/parameters/zfs_arc_max
+    echo "$[2 * 1024*1024*1024]" >/sys/module/zfs/parameters/zfs_arc_min
+
+Or permanently update this value using the following command:
+
+    # Set Max ARC size => 10GB == 10737418240 Bytes
+    # Set Min ARC size => 2GB  == 2147483648
+    echo "options zfs zfs_arc_max=10737418240" > /etc/modprobe.d/zfs.conf
+    echo "options zfs zfs_arc_min=2147483648" >> /etc/modprobe.d/zfs.conf
+    update-initramfs -u -k all
+    reboot # must be reboot to apply the modicications
+
+#### Note about ZFS optimization after system install:
+
+> source 1: https://blog.zanshindojo.org/proxmox-zfs-performance/
+> source 2: https://martin.heiland.io/2018/02/23/zfs-tuning/index.html
+
+We can activate `zstd` compression on ZFS in order to gain some performance increase.
+The `lz4` algorith is much faster in read mode, but compression rate is less compared to `zstd`. 
+Thus, we prioritize less data writing with `lz4`.
+
+    zfs set compression=lz4 rpool
+    zfs get compression rpool
+
+> Although the fact that the compression could enhance the performances, I found that 
+> the witing speed is better when the compression is set to off ! `zfs set compression=off rpool`
+> Still to make more experiments.
+
+The default **recordsize** is 128K. We configure **recordsize** to 512K (do not to update it in the storage config):
+
+    zfs set recordsize=256K rpool
+    zfs get recordsize rpool
+
+Then, we disable the `atime` only on rpool/ROOT/pve-1 and rpool/data:
+    
+    zfs set atime=off rpool
+    zfs get atime rpool
+
+Then, we `xattr` and `dnodesize` only for the data volume only:
+
+    zfs set xattr=sa dnodesize=auto rpool/data
+    zfs set xattr=sa rpool
+    zfs get xattr rpool/data
+    zfs get xattr rpool
+    zfs get dnodesize rpool/data
+
+Then, updating the `sync` option could increase the write speed.
+We are experimenting this option now.
+
+    zfs set sync=disabled rpool
+    #zfs set sync=standard rpool
+    zfs get sync rpool
+
+Finally, we activate `autotrim` option:
+
+    zpool set autotrim=on rpool
+    zpool get autotrim rpool
+    #sudo systemctl enable fstrim.timer
+
+### 1.5 - Configure swap partition
+
+In the case that we install **Proxmox** on the ZFS/BTRFS filesystem, then it is better that the swap partition will be outside the ZFS/BTRFS volumes. So, and in the **Proxmox** install, we update the partition size for ZFS/BTRFS in order to create a basic partition for swap (/dev/sda4).
+
+    mkswap /dev/sda4
+    swapon /dev/sda4
+    echo '/dev/sda4 none swap sw 0 0' | sudo tee -a /etc/fstab
+
 
 ## 2 - Test the system performances
 
+## 2.1 - Using fio
+
+We try different block size. The default size is 8k, but try other values. To measeaure the disk performances, we can use these commands:
+
+    apt install -y fio
+    #Random read
+    fio --filename=test --sync=1 --rw=randread --bs=512k --numjobs=1 --iodepth=1 --group_reporting --name=test --filesize=10M --runtime=300 && rm test
+    
+    #Random write	
+    fio --filename=test --sync=1 --rw=randwrite --bs=512k --numjobs=1 --iodepth=1 --group_reporting --name=test --filesize=10M --runtime=300 && rm test # --> 70 to 110
+    
+    #Sequential read	
+    fio --filename=test --sync=1 --rw=read --bs=512k --numjobs=1 --iodepth=1 --group_reporting --name=test --filesize=10M --runtime=300 && rm test
+    
+    #Sequential write	
+    fio --filename=test --sync=1 --rw=write --bs=512k --numjobs=1 --iodepth=1 --group_reporting --name=test --filesize=10M --runtime=300 && rm test  # --> 80 to 100
+
+
+## 2.2 - Using ioping and pigz
 In this section, we are focusing on testing the system performances in term of disk write/read speed, and memory read/write speed, and finally the CPU single/multiple speed.
 
 In **Proxmox** documentation, they talked about the **sysbench** tool. But here, I prefer to get speed value that I can understand rather that get a score to be compared to other machines.
@@ -68,17 +234,7 @@ Finally, we clean up and remove the installed tools:
     umount /tmp/ram
     rm -rf /tmp/ram
 
-## 3 - Proxmox Post-Install
-
-This section concerns making some tweaks for the Proxmox system. The website https://tteck.github.io/Proxmox/ provides many useful tools for such a purpose.
-
-    bash -c "$(wget -qLO - https://github.com/tteck/Proxmox/raw/main/misc/post-pve-install.sh)"
-
-This above shell command provides some options for managing Proxmox VE repositories, including disabling the Enterprise Repo, adding or correcting PVE sources, enabling the No-Subscription Repo, adding the test Repo, disabling the subscription nag, updating Proxmox VE, and rebooting the system.
-
-For our case, we are **not** motivated by adding the **Test Repo**, nor disabling the **HA** service (HIGH AVAILABILITY).
-
-## 4 - Optimisation of the Proxmox system
+## 3 - Optimisation of the Proxmox system
 
 The optimization of the **Proxmox** system is important since the Linux kernel is configured to work with a classical computer. In this section, we focus on configuring the system to deal with a number of VMs.
 
@@ -87,7 +243,7 @@ The optimization of the **Proxmox** system is important since the Linux kernel i
 We will work on optimizing the network, then the memory and finally the kernel. This will be done through **sysctl**.
 The, we address to alleviate the **Proxmox** system by disabling some useless services.
 
-### 4.1 Network optimization
+### 3.1 Network optimization
 
     cat << EOF | sudo tee -a /etc/sysctl.d/85_network_optimizations.conf
 
@@ -231,7 +387,7 @@ The, we address to alleviate the **Proxmox** system by disabling some useless se
     
     EOF
 
-### 4.2 Memory optimization
+### 3.2 Memory optimization
 
     cat << EOF | sudo tee -a /etc/sysctl.d/85_memory_optimizations.conf
 
@@ -293,7 +449,7 @@ The, we address to alleviate the **Proxmox** system by disabling some useless se
     vm.nr_hugepages = 1
     EOF
 
-### 4.3 Kernel optimization
+### 3.3 Kernel optimization
 
     cat << EOF | sudo tee -a /etc/sysctl.d/85_kernel_optimizations.conf
 
@@ -321,76 +477,9 @@ The, we address to alleviate the **Proxmox** system by disabling some useless se
 
     EOF
 
-### 4.3 Disabling unused services
+## 4 - Proxmox hardening
 
-Since we do not use ZFS, CEPH, SPCICE PROXY and high availability, we can disable them to optimize used memory:
-
-    # disable zfs (if the main filesystem is different)
-    sudo systemctl disable --now zfs-mount.service zfs-share.service zfs-volume-wait.service zfs-zed.service zfs-import.target zfs-volumes.target zfs.target
-
-    # disable ceph
-    sudo systemctl disable --now ceph-fuse.target ceph.target
-    sudo systemctl mask --now ceph.target
-
-    # disable spice proxy
-    sudo systemctl mask --now spiceproxy
-
-    # disable cluster and high availability 
-    sudo systemctl disable --now pve-ha-crm pve-ha-lrm corosync
-
-    # rebooting so the modification will be applied
-    sudo reboot
-
-### 4.4 Improve ZFS filesystem performances
-
-We can activate `zstd` compression on ZFS in order to gain some performance increase.
-
-    zfs set compression=zstd rpool
-    zfs get compression rpool
-
-Then, we disable the `atime` only on rpool/ROOT/pve-1 and rpool/data:
-    
-    zfs set atime=off rpool
-    zfs get atime rpool
-
-Then, we `xattr` and `dnodesize` only for the data volume only:
-
-    zfs set xattr=sa dnodesize=auto rpool/data
-    zfs set xattr=sa rpool
-    zfs get xattr rpool/data
-    zfs get xattr rpool
-    zfs get dnodesize rpool/data
-
-Finally, we activate `autotrim` option:
-
-    zpool set autotrim=on rpool
-    zpool get autotrim rpool
-
-### 4.5 Improve BTRFS filesystem performances
-
-#### SSD TRIM
-
-> source https://btrfs.readthedocs.io/en/latest/ch-mount-options.html
-> https://wiki.archlinux.org/title/Btrfs
-
-Trim or discard is an operation on a storage device based on flash technology (like ssd SSD and NVMe), a thin-provisioned device or could be emulated on top of other block device types. 
-
-We could enable the asynchronous trim in the /etc/fstab file through adding the option: `discard=async`.
-We can also apply fstrim manually through the command: `fstrim`.
-
-to make a manual defragmentation:
-
-    btrfs filesystem defragment -r /
-
-to apply the compression option to the current files:
-
-    btrfs filesystem defragment -r -v -czstd /
-
-
-
-## 3 - Proxmox hardening
-
-### 3.1 Create an alternative administrator user (mgrsys)
+### 4.1 Create an alternative administrator user (mgrsys)
 
 > This section is based on information and codes provided in : https://github.com/ehlesp/smallab-k8s-pve-guide/blob/main/G008%20-%20Host%20hardening%2002%20~%20Alternative%20administrator%20user.md
 
@@ -413,13 +502,13 @@ Now connect to the new created user and type:
 Finally, create a TAF for the new created user, and we save the created ssh keys in a save place.
 
 
-### 3.2 Manage the root user
+### 4.2 Manage the root user
 
 The **root** user will be kept, but the access to it will be more complicated. For the **Proxmox** user interface, the new created user **mgrsys** will be enough. And the access to root shell, will be through **sudo**.
 
 In this section, we aim to install the **pass** password manager (which will be synchronized with git). Then, we will update the root password with a hard one, and we create ssh key pair for it.
 
-#### 3.2.1 Create the root ssh keys
+#### 4.2.1 Create the root ssh keys
 
 First, we create a ssh key for the **root** user. This will be mandatory for the following steps.
 
@@ -429,7 +518,7 @@ First, we create a ssh key for the **root** user. This will be mandatory for the
     chmod -R go= /root/.ssh
     chown -R root:root /root/.ssh
 
-#### 3.2.2 Install GPG and PASS
+#### 4.2.2 Install GPG and PASS
 
     apt install gnupg2
     rm -rf ~/.gnupg
@@ -491,7 +580,7 @@ First, we create a ssh key for the **root** user. This will be mandatory for the
     pass git push -u --all
     # No, every stored password will be saved on git.
 
-#### 3.2.3 Update the root password with pass
+#### 4.2.3 Update the root password with pass
 
 Since **PASSS** is installed, we can create now a secure root password.
 
@@ -501,14 +590,14 @@ Since **PASSS** is installed, we can create now a secure root password.
 
 Finally, create a TAF for the **root** user, and we save the created ssh keys in a save place.
 
-### 3.3 Hardening the ssh access
+### 4.3 Hardening the ssh access
 
 In this section, we will make the access to the **Proxmox** server through **ssh** more complex:
 
     # Disable the dns usage for more speed,
     sed -r -i 's/^#?UseDNS.*/UseDNS no/g' /etc/ssh/sshd_config
 
-    #Diable accessing ssh through password
+    #Disable accessing ssh through password
     sed -r -i 's/^#?PermitEmptyPasswords.*/PermitEmptyPasswords no/g' /etc/ssh/sshd_config
     
     #Disabling X11Forwarding
@@ -545,7 +634,7 @@ Finally, restart the **ssh** server.
     sudo systemctl restart ssh
     sudo systemctl restart sshd
 
-## 4 - Configuring the proxmox Firewall
+## 5 - Configuring the proxmox Firewall
 
 > More information could be gathered on the Proxmox system on the website https://pve.proxmox.com/wiki/Firewall
 
@@ -570,15 +659,15 @@ For the **HOST** zone, we will accept only the following connections:
 
 By default, all the outgoing connections are allowed, and the rest of incoming connections are denied.
 
-## 5 - Proxmox LXC templates
+## 6 - Proxmox LXC templates
 
 Proxmox provide a wide list of LXC images for many Linux ditributions (Ubuntu, Debian, Opensuse, Centos, Turnkey, ...). To update this list, type the following command in the shell:
 
     pveam update
 
-## 6 - Misc
+## 7 - Misc
 
-### 6.1 - Daily System update
+### 7.1 - Daily System update
 
     cat << EOF > /etc/cron.daily/system-update
     #!/bin/bash
@@ -592,7 +681,7 @@ Proxmox provide a wide list of LXC images for many Linux ditributions (Ubuntu, D
     chmod a+x /etc/cron.daily/system-update
     run-parts --test /etc/cron.daily/ # to check
 
-### 6.2 - Daily System backup
+### 7.2 - Daily System backup
 
 The backup of the **Proxmox** system will be done through **rclone**. In this section, we will install **rclone** configure it. Then, we will create a script that will be called after each dump operation.
 
@@ -607,7 +696,7 @@ The backup of the **Proxmox** system will be done through **rclone**. In this se
     ############ /START CONFIG
     dumpdir="/var/lib/vz/dump/" # Set this to where the vzdump files are stored
     confdir="/var/lib/vz/configs/" # Set this to where the config files are stored
-    MAX_AGE=7 # This is the age in days to keep local backup copies.
+    MAX_AGE=60 # This is the age in days to keep local backup copies.
     export PASSWORD_STORE_DIR=/root/.password-store
     export RCLONE_PASSWORD_COMMAND='/bin/bash -l -c "/usr/bin/pass system/rclone/config"'
     export RCLONE_CONFIG_PASS=$(/bin/bash -l -c "/usr/bin/pass system/rclone/config")
@@ -687,41 +776,41 @@ The backup of the **Proxmox** system will be done through **rclone**. In this se
 
 After this step, the system will call the above script daily. Please to consider to schedule a fill backup (for all the VMs) for each Sunday at 1am.
 
-### 6.2 - Other
+### 7.3 - Other
 
 The website https://tteck.github.io/Proxmox/ provides valuable scripts to install and configure many things on the Proxmox system.
 
-## 7 - VM and network organization
+## 8 - VM and network organization
 
-### 7.1 Vlans
+### 8.1 Vlans
 
-| VLAN           | NAME  | IP addresses     |
-|----------------|:-----:|-----------------:|
-| vmbr0          | WAN   | -                |
-| vmbr1.10       | DMZ   | 192.168.10.0/24  |
-| vmbr1.20       | HOST  | 192.168.20.0/24  |
-| vmbr1.30       | VMs   | 192.168.30.0/24  |
-| vmbr1.40       | LXCs  | 192.168.40.0/24  |
-| vmbr1.50       | TEMP  | 192.168.50.0/24  |
+| VLAN     | NAME  |    IP addresses |
+| -------- | :---: | --------------: |
+| vmbr0    |  WAN  |               - |
+| vmbr1.10 |  DMZ  | 192.168.10.0/24 |
+| vmbr1.20 | HOST  | 192.168.20.0/24 |
+| vmbr1.30 |  VMs  | 192.168.30.0/24 |
+| vmbr1.40 | LXCs  | 192.168.40.0/24 |
+| vmbr1.50 | TEMP  | 192.168.50.0/24 |
 
 
-### 7.2 VM IDs and IPs
+### 8.2 VM IDs and IPs
 
-| Description       | ID range                 |IP range                  |
-|-------------------|:------------------------:|:------------------------:|
-| WAN               | 100  -- 999              |                          |
-| DMZ               | 1000 -- 1999             | 192.168.10.1 --> 254     |
-| HOST              | 2000 -- 2999             | 192.168.20.1 --> 254     |
-| VMs               | 3000 -- 3999             | 192.168.30.1 --> 254     |
-| LXCs              | 4000 -- 4999             | 192.168.40.1 --> 254     |
-| TEMP              | 5000 -- 5999             | 192.168.50.1 --> 254     |
+| Description |   ID range   |       IP range       |
+| ----------- | :----------: | :------------------: |
+| WAN         | 100  -- 999  |                      |
+| DMZ         | 1000 -- 1999 | 192.168.10.1 --> 254 |
+| HOST        | 2000 -- 2999 | 192.168.20.1 --> 254 |
+| VMs         | 3000 -- 3999 | 192.168.30.1 --> 254 |
+| LXCs        | 4000 -- 4999 | 192.168.40.1 --> 254 |
+| TEMP        | 5000 -- 5999 | 192.168.50.1 --> 254 |
 
-### 7.3 Templates IDs and IPs
+### 8.3 Templates IDs and IPs
 
-| Description       | ID range                 |IP range                  |
-|-------------------|:------------------------:|:------------------------:|
-| Templates:Alpine  | 5000 -- 5099             | 192.168.50.1  --> 9      |
-| Templates:Ubuntu  | 5100 -- 5199             | 192.168.50.10 --> 19     |
-| Templates:Debian  | 5200 -- 5299             | 192.168.50.20 --> 29     |
-| Templates:Openwrt | 5300 -- 5399             | 192.168.50.30 --> 39     |
-| Templates:Rocky   | 5400 -- 5499             | 192.168.50.40 --> 49     |
+| Description       |   ID range   |       IP range       |
+| ----------------- | :----------: | :------------------: |
+| Templates:Alpine  | 5000 -- 5099 | 192.168.50.1  --> 9  |
+| Templates:Ubuntu  | 5100 -- 5199 | 192.168.50.10 --> 19 |
+| Templates:Debian  | 5200 -- 5299 | 192.168.50.20 --> 29 |
+| Templates:Openwrt | 5300 -- 5399 | 192.168.50.30 --> 39 |
+| Templates:Rocky   | 5400 -- 5499 | 192.168.50.40 --> 49 |

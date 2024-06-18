@@ -78,7 +78,7 @@ Enable high availability (if it qas disabled)
 
 We update the bootloader so it will boot with the parameter `quiet intel_iommu=on iommu=pt intremap=no_x2apic_optout`:
 
-    sed -r -i 's/^#?GRUB_CMDLINE_LINUX_DEFAULT.*/GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on iommu=pt intremap=no_x2apic_optout"/g' /etc/default/grub
+    sed -r -i 's/^#?GRUB_CMDLINE_LINUX_DEFAULT.*/GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on iommu=pt intremap=no_x2apic_optout"/g' /etc/default/grub          
     echo "options vfio_iommu_type1 allow_unsafe_interrupts=1" > /etc/modprobe.d/iommu_unsafe_interrupts.conf
     cat <<EOF >>/etc/modules
     vfio
@@ -102,7 +102,7 @@ After the reboot, we make an update for the system, and we install some useful t
 
 #### Note about the ashift size:
 
-In the **Proxmox** setup (install), select `ashift=13`. The *HP i220 array* provides virtual/physical sector size equal to **512** (physical/virtual). But the `ashift=13` hexebits better performances.
+In the **Proxmox** setup (install), select `ashift=12`. The *HP i220 array* provides virtual/physical sector size equal to **512** (physical/virtual). But the `ashift=12` hexebits better performances.
 
 #### Note about ARC:
 
@@ -110,8 +110,8 @@ ZFS is known to use large amount of memory for cache (Adaptive Replacement Cache
 Allocating enough memory for the ARC is crucial for IO performance, so reduce it with caution.
 As a general rule, allocate at least 2 GiB Base + 1 GiB/TiB-Storage (some people say that 5GiB/TiB-Storage will be better). In our case, we will provide ZFS to use up to 5GiB of memory (normally 3GiB).
 
-    echo "$[10 * 1024*1024*1024]" >/sys/module/zfs/parameters/zfs_arc_max
-    echo "$[2 * 1024*1024*1024]" >/sys/module/zfs/parameters/zfs_arc_min
+    echo "$[10 * 1024*1024*1024]" > /sys/module/zfs/parameters/zfs_arc_max
+    echo "$[2 * 1024*1024*1024]" > /sys/module/zfs/parameters/zfs_arc_min
 
 Or permanently update this value using the following command:
 
@@ -140,8 +140,10 @@ Thus, we prioritize less data writing with `lz4`.
 
 The default **recordsize** is 128K. We configure **recordsize** to 512K (do not to update it in the storage config):
 
-    zfs set recordsize=256K rpool
-    zfs get recordsize rpool
+    zfs set recordsize=512K rpool/ROOT
+    zfs set recordsize=16K rpool/data
+    zfs get recordsize rpool/ROOT
+    zfs get recordsize rpool/data
 
 Then, we disable the `atime` only on rpool/ROOT/pve-1 and rpool/data:
     
